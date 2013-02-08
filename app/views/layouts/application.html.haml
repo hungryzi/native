@@ -12,7 +12,7 @@
     = stylesheet_link_tag "application", :media => "all"
 
   %body
-    .navbar.navbar-fluid-top
+    .navbar.navbar-fluid-top.navbar-inverse
       .navbar-inner
         .container-fluid
           %a.btn.btn-navbar(data-target=".nav-collapse" data-toggle="collapse")
@@ -22,25 +22,16 @@
           %a.brand(href="#") Bookworm
           .container.nav-collapse
             %ul.nav
-              %li= link_to "Link 1", "/path1"
-              %li= link_to "Link 2", "/path2"
-              %li= link_to "Link 3", "/path3"
+              %li= link_to "New Chapter", "#index"
 
     .container-fluid
 
       .row-fluid
-        .span3
-          .well.sidebar-nav
-            %ul.nav.nav-list
-              %li.nav-header Sidebar
-              %li= link_to "Link 1", "/path1"
-              %li= link_to "Link 2", "/path2"
-              %li= link_to "Link 3", "/path3"
-        .span9
+        .span12
           = yield
-    
+
       %footer
-        %p &copy; Company 2012
+        %p &copy; Bookworm 2012
     /
       Javascripts
       \==================================================

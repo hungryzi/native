@@ -2,7 +2,7 @@ class Parser
   def self.split_words text
     text.strip.
       downcase.
-      gsub(/[^a-zA-Z0-9\'\s]+/, "").
+      gsub(/[^a-z0-9\'\s]+/, "").
       gsub(/\'s/, "").
       split(/\s+/)
   end

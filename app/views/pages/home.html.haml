@@ -1,0 +1,14 @@
+%h3 Read something
+
+%form
+  %fieldset
+    %textarea{ name: 'text' }
+    %button{ type: 'submit', class: 'btn' } Process
+
+  %ul
+    - @sorted.each do |word, occurrence_count|
+      %li.keyword
+        %span.word= word
+        %span.count= occurrence_count
+        %span.definition
+
