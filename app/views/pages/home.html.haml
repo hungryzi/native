@@ -1,14 +1,19 @@
-%h3 Read something
+%h3.header Read Something
 
-%form
-  %fieldset
-    %textarea{ name: 'text' }
-    %button{ type: 'submit', class: 'btn' } Process
+.row-fluid
+  %form{ method: 'POST' }
+    %fieldset
+      %textarea{ name: 'text', placeholder: "paste the text you're gonna read here..." }= @text
+      %br
+      %button{ type: 'submit', class: 'btn' } Process
 
-  %ul
+.row-fluid
+  %ul.words.span3
     - @sorted.each do |word, occurrence_count|
-      %li.keyword
-        %span.word= word
+      %li.word
+        %span.text= word
         %span.count= occurrence_count
-        %span.definition
+
+  %span.definition.span8
+
 
