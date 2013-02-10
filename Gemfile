@@ -6,6 +6,7 @@ gem 'rails', '3.2.8'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'pg'
+gem 'haml-rails'
 
 group :test, :development do
   gem 'rspec-rails'
@@ -17,7 +18,6 @@ end
 group :assets do
   gem 'sass-rails'
   gem 'coffee-rails'
-  gem 'haml-rails'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer', :platforms => :ruby
