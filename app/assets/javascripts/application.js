@@ -13,36 +13,51 @@
 //= require jquery
 //= require jquery_ujs
 //= require twitter/bootstrap
+//= require underscore-min
+//= require backbone-min
+//= require indexeddb-backbone
+//= require db
+//= require events
 //= require_tree .
 
-(function() {
-  $('textarea').focus();
+(function(){
+  var logger = function() { console.debug(arguments) };
 
-  $('li.word').on('click', function(e){
-    var keyword = $(e.currentTarget).find('.text').text();
-    if (keyword.trim() === '') return;
+  var dbRequest = IndexedDBBackbone.indexedDB.open(app.schema.id, app.schema.version());
+  dbRequest.onblocked = logger;
+  dbRequest.onerror = logger;
+  dbRequest.onabort = logger;
+  dbRequest.onupgradeneeded = function(e){
+    logger("Upgrading database now");
+    app.schema.onupgradeneeded(e);
+  };
 
-    $('li.word').removeClass('selected');
-    $(e.currentTarget).addClass('selected');
+  dbRequest.onsuccess = function(e){
+    var db = e.target.result;
+    var transaction = db.transaction(['words'], 'readwrite');
+    transaction.onerror = logger;
+    transaction.oncomplete = logger;
+    wordsStore = transaction.objectStore('words');
 
-    var $definition = $('.definition');
-    offsetTop = $(e.currentTarget).offset().top;
-    offsetLeft = $definition.offset().left;
-    $definition.offset({ top: offsetTop, left: offsetLeft });
+    // after loading, add all the words to indexeddb
+    $('li.word').toArray().forEach(function(li){
+      text = $(li).find('span.text').text();
+      var getRequest = wordsStore.get(text);
+      getRequest.onerror = logger;
+      getRequest.onsuccess = function(e){
+        var result = e.target.result;
 
-    var url = 'http://www.google.com/dictionary/json?callback=dict_api.callbacks.id100&q='+ keyword +'&sl=en&tl=en&restrict=pr%2Cde&client=te'
-    $.ajax(url, {
-      dataType: 'jsonp',
-      success: function(result){
-        if (result.webDefinitions){
-          encoded = result.webDefinitions[0].entries[0].terms[0].text;
-          decoded = $('<span/>').html(encoded).text();
-          $definition.text(decoded);
+        if (result) {
+          if (result.status === -1) {
+            $('li.word.rt-' + result.text).remove(); //TODO: transition
+          }
+        } else {
+          wordsStore.add({ text: text, status: 0 });
         }
-      },
-      error: function(result){
-        console.debug('error', arguments);
-      }
+      };
     });
-  });
+
+    db.close();
+  };
 })();
+

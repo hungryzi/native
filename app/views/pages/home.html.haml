@@ -3,16 +3,20 @@
 .row-fluid
   %form{ method: 'POST' }
     %fieldset
-      %textarea{ name: 'text', placeholder: "paste the text you're gonna read here..." }= @text
+      %textarea{ name: 'text', placeholder: "paste the next chapter here..." }= @text
       %br
       %button{ type: 'submit', class: 'btn' } Process
 
 .row-fluid
+  %h5.lead= "There are #{@sorted.size} words in total."
+
   %ul.words.span3
     - @sorted.each do |word, occurrence_count|
-      %li.word
-        %span.text= word
+      %li.word.clearfix{ class: "rt-#{word}" }
         %span.count= occurrence_count
+        %span.text= word
+        %span.actions
+          %i.remove.icon-remove
 
   %span.definition.span8
 

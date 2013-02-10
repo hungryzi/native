@@ -35,6 +35,10 @@ form {
       border: none;
     }
   }
+
+  button {
+    margin: 0 auto;
+  }
 }
 
 ul.words {
@@ -53,9 +57,27 @@ ul.words {
     }
 
     span.count {
-      float: right;
-      text-align: right;
+      width: 25px;
+      display: inline-block;
     }
+
+    span.text {
+      font-weight: bold;
+    }
+
+    span.actions {
+      float: right;
+
+      i {
+        width: 20px;
+        height: 20px;
+
+        &:hover {
+          background-color: white;
+        }
+      }
+    }
+
   }
 }
 
