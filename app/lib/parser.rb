@@ -7,6 +7,15 @@ class Parser
       split(/\s+/)
   end
 
+  def self.remove_numbers words
+    filtered = []
+    words.each do |word|
+      filtered << word unless /^\d+((,|\.)\d+){0,1}$/.match(word)
+    end
+
+    filtered
+  end
+
   def self.count_occurrences words
     word_occurrence_map = {}
 

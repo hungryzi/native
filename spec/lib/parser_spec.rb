@@ -33,6 +33,23 @@ describe Parser do
     end
   end
 
+  describe "#remove_numbers" do
+    it "removes numbers" do
+      words = Parser.remove_numbers %w(year 2134 2141 in utopian world 3345436325)
+      expect(words).to eq %w(year in utopian world)
+    end
+
+    it "removes float numbers too" do
+      words = Parser.remove_numbers %w(year 21.34 002.141 in utopian world)
+      expect(words).to eq %w(year in utopian world)
+    end
+
+    it "doesn't remove weird numbers" do
+      words = Parser.remove_numbers %w(ip address 21.34.002.141 in utopian world)
+      expect(words).to eq %w(ip address 21.34.002.141 in utopian world)
+    end
+  end
+
   describe "#count_occurrences" do
     it "returns a hash with words and their occurrences" do
       words = %w(all that is gold does not glitter not all who wander are lost)
