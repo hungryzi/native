@@ -7,6 +7,7 @@ gem 'rails', '3.2.8'
 
 gem 'pg'
 gem 'haml-rails'
+gem 'newrelic_rpm'
 
 group :test, :development do
   gem 'rspec-rails'
