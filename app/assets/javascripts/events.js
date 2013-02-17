@@ -9,6 +9,7 @@
     $(e.currentTarget).addClass('selected');
 
     var $definition = $('.definition');
+    $definition.empty();
     offsetTop = $(e.currentTarget).offset().top;
     offsetLeft = $definition.offset().left;
     $definition.offset({ top: offsetTop, left: offsetLeft });
@@ -17,11 +18,15 @@
     $.ajax(url, {
       dataType: 'jsonp',
       success: function(result){
+        var $ul = $('<ul/>');
         if (result.webDefinitions){
-          encoded = result.webDefinitions[0].entries[0].terms[0].text;
-          decoded = $('<span/>').html(encoded).text();
-          $definition.text(decoded);
-        }
+          result.webDefinitions[0].entries.forEach(function(entry){
+            encoded = entry.terms[0].text;
+            decoded = $('<span/>').html(encoded).text();
+            $ul.append($('<li/>').text(decoded));
+          });
+        };
+        $definition.html($ul);
       },
       error: function(result){
         console.debug('error', arguments);
