@@ -424,98 +424,6 @@
 
   })(IndexedDBBackbone.Driver.Operation);
 
-  IndexedDBBackbone.Databases = {};
-
-  IndexedDBBackbone._schemas = {};
-
-  IndexedDBBackbone.describe = function(dbName) {
-    return IndexedDBBackbone._schemas[dbName] = IndexedDBBackbone.IDBSchema.describe(dbName);
-  };
-
-  IndexedDBBackbone._getDriver = function(databaseName) {
-    var Databases, schema, _name;
-    Databases = IndexedDBBackbone.Databases;
-    schema = IndexedDBBackbone._schemas[databaseName];
-    if (Databases[schema.id]) {
-      if (Databases[schema.id].version < schema.version()) {
-        Databases[schema.id].close();
-        delete Databases[schema.id];
-      }
-    }
-    return Databases[_name = schema.id] || (Databases[_name] = new IndexedDBBackbone.Driver(schema));
-  };
-
-  IndexedDBBackbone.sync = function(method, object, options) {
-    var dbName, id, objects, storeNames;
-    switch (method) {
-      case "closeall":
-        _.each(IndexedDBBackbone.Databases, function(database) {
-          return database.close();
-        });
-        return IndexedDBBackbone.Databases = {};
-      case "begin":
-        if (object instanceof Array) {
-          objects = object;
-        } else {
-          objects = [object];
-        }
-        dbName = objects[0].database;
-        storeNames = _.chain(objects).map(function(obj) {
-          return obj.storeName;
-        }).uniq().value();
-        return IndexedDBBackbone._getDriver(dbName).begin(storeNames, options);
-      case "commit":
-      case "abort":
-        if (object instanceof Array) {
-          objects = object;
-        } else {
-          objects = [object];
-        }
-        dbName = objects[0].database;
-        return IndexedDBBackbone._getDriver(dbName)[method]();
-      case "read":
-        if (object.id || object.cid) {
-          return IndexedDBBackbone._getDriver(object.database).get(object.storeName, object.toJSON(), options);
-        } else {
-          options = _.extend({}, {
-            query: object._idbQuery || new IndexedDBBackbone.IDBQuery(object.storeName)
-          }, options);
-          return IndexedDBBackbone._getDriver(object.database).query(object.storeName, options);
-        }
-        break;
-      case "create":
-      case "update":
-        if (method === "create") {
-          method = "add";
-          if (object.id == null) {
-            object.set(object.idAttribute, IndexedDBBackbone.guid());
-          }
-        } else {
-          method = "put";
-        }
-        options = _.extend({}, options, {
-          key: object.id
-        });
-        return IndexedDBBackbone._getDriver(object.database)[method](object.storeName, object.toJSON(), options);
-      case "delete":
-        if (id = object.id || object.cid) {
-          return IndexedDBBackbone._getDriver(object.database)["delete"](object.storeName, id, options);
-        } else {
-          return IndexedDBBackbone._getDriver(object.database).clear(object.storeName, options);
-        }
-        break;
-      default:
-        return this.logger("Unhandled sync method:", method);
-    }
-  };
-
-  if (typeof exports === 'undefined') {
-    Backbone.ajaxSync = Backbone.sync;
-    Backbone.sync = IndexedDBBackbone.sync;
-  } else {
-    exports.sync = IndexedDBBackbone.sync;
-  }
-
   IndexedDBBackbone.IDBSchema = (function() {
 
     IDBSchema.prototype._logChannel = false;
@@ -589,24 +497,6 @@
     return IDBSchema;
 
   })();
-
-  IndexedDBBackbone.transaction = function(objects, callback, options) {
-    var indexedDB;
-    indexedDB = IndexedDBBackbone.indexedDB;
-    IndexedDBBackbone.sync('begin', objects, options);
-    try {
-      if (callback()) {
-        return IndexedDBBackbone.sync('commit', objects);
-      } else {
-        return IndexedDBBackbone.sync('abort', objects);
-      }
-    } catch (error) {
-      IndexedDBBackbone.sync('abort', objects);
-      return options != null ? typeof options.error === "function" ? options.error(error) : void 0 : void 0;
-    }
-  };
-
-  Backbone.transaction = IndexedDBBackbone.transaction;
 
   Dir = IndexedDBBackbone.IDBCursor;
 

@@ -1,18 +1,5 @@
 (function() {
-  var logger = function() { console.debug(arguments) };
-
   $('textarea').focus();
-
-  $('#toggle-view').on('click', function(e){
-    $('ul.words').toggleClass('show-only-chosen');
-
-    if ($('ul.words').hasClass('show-only-chosen')){
-      $('li.word').hide();
-      $('li.word.chosen').show();
-    } else {
-      $('li.word').show();
-    }
-  });
 
   $('li.word').on('click', function(e){
     var keyword = $(e.currentTarget).find('.text').text();
@@ -42,62 +29,36 @@
     });
   });
 
-  $('li.word span.actions i.remove').on('click', function(e) {
+  var stopEvent = function(e){
     e.stopPropagation();
     e.preventDefault();
+  }
 
-    var $li = $(e.target).parents('li.word');
-    var text = $li.find('span.text').text();
+  var getText = function(actionElem){
+    var $li = $(actionElem).parents('li.word');
+    return $li.find('span.text').text();
+  }
 
-    var dbRequest = IndexedDBBackbone.indexedDB.open(app.schema.id, app.schema.version());
-    dbRequest.onblocked = logger;
-    dbRequest.onerror = logger;
-    dbRequest.onabort = logger;
-    dbRequest.onupgradeneeded = function(e){
-      logger("Upgrading database now");
-      app.schema.onupgradeneeded(e);
-    };
+  $('li.word span.actions i.remove').on('click', function(e) {
+    stopEvent();
+    var text = getText(e.target);
 
-    dbRequest.onsuccess = function(e){
-      var db = e.target.result;
-      var transaction = db.transaction(['words'], 'readwrite');
-      transaction.oncomplete = logger;
-      wordsStore = transaction.objectStore('words');
-      wordsStore.put({ text: text, status: -1 });
-
-      db.close();
-    };
-
-    $li.fadeOut('fast', function(){ $(this).remove(); });
+    app.db.put('words', { text: text, status: -1 }, {
+      error: function(msg){ console.debug('Error: ', msg); },
+      success: function(result){ $li.fadeOut('fast', function(){ $(this).remove(); }); }
+    });
   });
 
   $('li.word span.actions i.add').on('click', function(e) {
-    e.stopPropagation();
-    e.preventDefault();
+    stopEvent();
+    var text = getText(e.target);
 
-    var $li = $(e.target).parents('li.word');
-    var text = $li.find('span.text').text();
-
-    var dbRequest = IndexedDBBackbone.indexedDB.open(app.schema.id, app.schema.version());
-    dbRequest.onblocked = logger;
-    dbRequest.onerror = logger;
-    dbRequest.onabort = logger;
-    dbRequest.onupgradeneeded = function(e){
-      logger("Upgrading database now");
-      app.schema.onupgradeneeded(e);
-    };
-
-    dbRequest.onsuccess = function(e){
-      var db = e.target.result;
-      var transaction = db.transaction(['words'], 'readwrite');
-      transaction.oncomplete = logger;
-      wordsStore = transaction.objectStore('words');
-      wordsStore.put({ text: text, status: 1 });
-
-      db.close();
-    };
-
-    $li.addClass('chosen');
-    $li.css('background-color', 'blue');
+    app.db.put('words', { text: text, status: 1 }, {
+      error: function(msg){ console.debug('Error: ', msg); },
+      success: function(e){
+        $li.addClass('chosen');
+        $li.css('background-color', 'blue');
+      }
+    });
   });
 })();
