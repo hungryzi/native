@@ -9,9 +9,14 @@ gem 'pg'
 gem 'haml-rails'
 gem 'newrelic_rpm'
 
+gem 'epub-parser'
+
 group :test, :development do
   gem 'rspec-rails'
-  gem 'spin'
+  gem 'capybara'
+
+  gem 'zeus'
+  gem 'debugger'
 end
 
 # Gems used only for assets and not required

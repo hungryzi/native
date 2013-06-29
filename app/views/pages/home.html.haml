@@ -1,11 +1,12 @@
 %h3.header Read Something
 
 .row-fluid
-  %form{ method: 'POST' }
-    %fieldset
+  = form_tag '/', method: 'POST', multipart: true do
+    = field_set_tag do
+      %input{ type: 'file', id: 'file', name: 'file', placeholder: 'An ePub file here' }
       %textarea{ name: 'text', placeholder: "paste the next chapter here..." }= @text
       %br
-      %button{ type: 'submit', class: 'btn' } Process
+      %button{ type: 'submit', class: 'btn' } Read
 
 .row-fluid
   %h5.lead= "There are #{@sorted.size} words in total."
@@ -19,5 +20,3 @@
           %i.remove.icon-remove
 
   %span.definition.span8
-
-
