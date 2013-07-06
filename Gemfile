@@ -27,9 +27,12 @@ end
 group :assets do
   gem 'sass-rails'
   gem 'coffee-rails'
+  gem 'less-rails'
+
+  gem 'twitter-bootstrap-rails'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer', :platforms => :ruby
+  gem 'therubyracer'
 
   gem 'uglifier'
 end
