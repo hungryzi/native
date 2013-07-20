@@ -17,6 +17,8 @@ gem 'epub-parser'
 group :test, :development do
   gem 'rspec-rails'
   gem 'capybara'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
 
   gem 'zeus'
   gem 'debugger'

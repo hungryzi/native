@@ -46,6 +46,8 @@ Bookworm::Application.routes.draw do
   #     resources :products
   #   end
 
+  put 'words/ignore' => 'words#ignore'
+
   post '/' => 'pages#home'
 
   # You can have the root of your site routed with "root"

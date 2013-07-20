@@ -20,32 +20,3 @@
 //= require events
 //= require_tree .
 
-(function(){
-  // after loading, add all the words to indexeddb
-  var options = function(text){
-    return {
-      error: function(msg){
-        if (msg == "Not Found"){
-          app.db.add('words', { text: text, status: 0 });
-        }
-      },
-      success: function(result){
-        if (result.status === -1) {
-          $('li.word.rt-' + result.text).remove(); //TODO: transition
-        }
-      }
-    };
-  };
-
-  app.db.begin(['words'], {
-    complete: function(e) { console.debug('complete'); },
-    abort: function(e) { console.debug('abort'); }
-  });
-  $('li.word').toArray().forEach(function(li){
-    var text = $(li).find('span.text').text();
-    app.db.get('words', { text: text }, options(text));
-  });
-  app.db.commit();
-
-})();
-
