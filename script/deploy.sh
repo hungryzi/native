@@ -7,7 +7,7 @@ git push heroku master
 echo '==========> Finished pushing to heroku/master'
 
 echo '==========> Migrating the database if necessary'
-heroku rake db:migrate
+heroku run rake db:migrate
 
 echo '==========> Restarting'
 heroku restart
