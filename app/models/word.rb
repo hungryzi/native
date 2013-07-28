@@ -1,4 +1,5 @@
 class Word < ActiveRecord::Base
   ACTIVE = 'active'
-  IGNORED = 'ignore'
+  IGNORED = 'ignored'
+  FAVORITED = 'favorited'
 end

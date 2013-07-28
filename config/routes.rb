@@ -47,6 +47,7 @@ Bookworm::Application.routes.draw do
   #   end
 
   put 'words/ignore' => 'words#ignore'
+  put 'words/favorite' => 'words#favorite'
 
   post '/' => 'pages#home'
 

@@ -13,10 +13,12 @@
 
   %ul.words.span3
     - @sorted.each do |word, occurrence_count|
-      %li.word.clearfix{ class: "rt-#{word}" }
+      - status = Word.where(word: word).first.try(:status)
+      %li.word.clearfix{ class: "rt-#{word} #{status}" }
         %span.count= occurrence_count
         %span.text= word
         %span.actions
+          %i.favorite.icon-heart
           %i.ignore.icon-remove
 
   %span.definition.span8
