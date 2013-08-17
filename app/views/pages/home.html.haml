@@ -1,24 +1,37 @@
-%h3.header Read Something
 
 .row-fluid
-  = form_tag '/', method: 'POST', multipart: true do
-    = field_set_tag do
-      %input{ type: 'file', id: 'file', name: 'file', placeholder: 'An ePub file here' }
-      %textarea{ name: 'text', placeholder: "paste the next chapter here..." }= @text
-      %br
-      %button{ type: 'submit', class: 'btn' } Read
+  .span7#left-pane
+    %h3 Read Something
+    %h5 To start, either uploading an EPUB file or paste the text you want to process to the box.
+    = form_tag '/', method: 'POST', multipart: true do
+      %div
+        = file_field_tag :file
+      %div
+        = text_area_tag :text, @text, class: 'span12', rows: 20
+      %div
+        = button_tag :submit, class: 'btn btn-primary' do
+          Read
 
-.row-fluid
-  %h5.lead= "There are #{@sorted.size} words in total."
+    %span.definition.span8
 
-  %ul.words.span3
-    - @sorted.each do |word, occurrence_count|
-      - status = Word.where(word: word).first.try(:status)
-      %li.word.clearfix{ class: "rt-#{word} #{status}" }
-        %span.count= occurrence_count
-        %span.text= word
-        %span.actions
-          %i.favorite.icon-heart
-          %i.ignore.icon-remove
+    %footer
+      .row-fluid
+        .span12 &copy; hungryzi 2012
 
-  %span.definition.span8
+  .span5#right-pane
+    %h5= "There are #{@sorted.size} words in total."
+
+    %ul.unstyled.words
+      - @sorted.each do |word, occurrence_count|
+        - status = Word.where(word: word).first.try(:status)
+        - unless status == Word::IGNORED
+          %li.word.clearfix{ class: "rt-#{word} #{status}" }
+            .span2.count= occurrence_count
+            %span.text= word
+            %span.actions.pull-right
+              %button.btn.favorite
+                %i.icon-heart
+              %button.btn.ignore
+                %i.icon-remove
+
+

@@ -1,7 +1,7 @@
 (function() {
   $('textarea').focus();
 
-  $('li.word').on('click', function(e){
+  $('.word .text').on('click', function(e){
     var keyword = $(e.currentTarget).find('.text').text();
     if (keyword.trim() === '') return;
 
@@ -44,7 +44,7 @@
     return $li.find('span.text').text();
   }
 
-  $('li.word span.actions i.ignore').on('click', function(e) {
+  $('.word .ignore').on('click', function(e) {
     var text = getText(e.currentTarget);
     var $li = $(e.currentTarget).closest('li');
 
@@ -62,9 +62,10 @@
     });
   });
 
-  $('li.word span.actions i.favorite').on('click', function(e) {
+  $('.word .favorite').on('click', function(e) {
     var text = getText(e.currentTarget);
     var $li = $(e.currentTarget).closest('li');
+    debugger
 
     var url = '/words/favorite'
     $.ajax(url, {
