@@ -12,7 +12,10 @@ class PagesController < ApplicationController
     word_occurrences = Parser.count_occurrences(words)
     @sorted = word_occurrences.sort_by { |k, v| v }
 
-    @words = Word.where("word IN (?)", words)
+    @word_status = {}
+    Word.where("word IN (?)", words).each do |w|
+      @word_status[w.word] = w.status
+    end
   end
 end
 

@@ -1,0 +1,22 @@
+.row-fluid
+  .span7#left-pane
+    %h3 Read Something
+    %h5 Your favorite words
+
+    %span.definition.span8
+
+    %footer
+      .row-fluid
+        .span12 &copy; hungryzi 2012
+
+  .span5#right-pane
+    %ul.inline.unstyled
+      %li
+        %a{ href: '/favorite' } Favorite
+
+    %h5= "There are #{@words.size} words in total."
+
+    %ul.unstyled.words
+      - @words.each do |w|
+        %li.word.clearfix{ class: "rt-#{w.word} #{w.status}" }
+          %span.text= w.word
