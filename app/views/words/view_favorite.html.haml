@@ -10,9 +10,7 @@
         .span12 &copy; hungryzi 2012
 
   .span5#right-pane
-    %ul.inline.unstyled
-      %li
-        %a{ href: '/favorite' } Favorite
+    = render 'shared/nav'
 
     %h5= "There are #{@words.size} words in total."
 
