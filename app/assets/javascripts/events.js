@@ -65,7 +65,6 @@
   $('.word .favorite').on('click', function(e) {
     var text = getText(e.currentTarget);
     var $li = $(e.currentTarget).closest('li');
-    debugger
 
     var url = '/words/favorite'
     $.ajax(url, {
